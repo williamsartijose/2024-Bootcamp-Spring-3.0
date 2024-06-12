@@ -6,17 +6,18 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name ="tb_category")
+@Table(name = "tb_category")
 public class Category implements Serializable {
     private static final long serialVersioUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
-    public Category(){
+    public Category() {
 
     }
+
     public Category(Long id, String name) {
         this.id = id;
         this.name = name;
