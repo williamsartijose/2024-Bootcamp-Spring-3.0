@@ -1,16 +1,16 @@
 package com.devsuperior.dscatalog.dto;
 
-import com.devsuperior.dscatalog.entities.Category;
-
 import java.io.Serializable;
 
+import com.devsuperior.dscatalog.entities.Category;
+
 public class CategoryDTO implements Serializable {
-    private static final long serialVersioUID = 1L;
+    private static final long serialVersionUID = 1L;
+
     private Long id;
     private String name;
 
     public CategoryDTO() {
-
     }
 
     public CategoryDTO(Long id, String name) {
