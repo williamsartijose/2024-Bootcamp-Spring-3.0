@@ -57,3 +57,4 @@ https://www.figma.com/file/1n0aifcfatWv9ozp16XCrq/DSCatalog-Bootcamp
 ## Modelo conceitual do DSCatalog
 
 
+![Web 0](https://github.com/williamsartijose/2024-Bootcamp-Spring-3.0/blob/main/dscatalog/img/1.png)
