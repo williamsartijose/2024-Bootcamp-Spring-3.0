@@ -109,8 +109,9 @@ Visão geral
 
 
 
-
-
+![Web 0](https://github.com/williamsartijose/2024-Bootcamp-Spring-3.0/blob/main/Testes%20automatizados%20no%20back%20end/aulaJunit/img/EX1.png)
+![Web 1](https://github.com/williamsartijose/2024-Bootcamp-Spring-3.0/blob/main/Testes%20automatizados%20no%20back%20end/aulaJunit/img/2.png)
+![Web 2](https://github.com/williamsartijose/2024-Bootcamp-Spring-3.0/blob/main/Testes%20automatizados%20no%20back%20end/aulaJunit/img/3.png)
 
 
 
