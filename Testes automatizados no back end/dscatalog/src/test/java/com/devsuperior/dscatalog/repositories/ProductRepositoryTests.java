@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.Optional;
 
@@ -34,5 +35,16 @@ public class ProductRepositoryTests {
         Optional<Product> result = repository.findById(existingId); // Tenta buscar o produto deletado
         Assertions.assertFalse(result.isPresent());
         // Verifica se o produto não está presente (o que significa que foi deletado com sucesso)
+    }
+
+
+    @Test
+    public void deleteShouldThrowsEmptyResultDataAccessExceptionWhenIdDoesNotExist(){
+
+        long nonExistingId = 20L;
+
+        Assertions.assertThrows(EmptyResultDataAccessException.class, () -> {
+           repository.deleteById(nonExistingId);
+        });
     }
 }
