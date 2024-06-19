@@ -1,11 +1,14 @@
 package com.devsuperior.dscatalog.repositories;
 
+import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.entities.Product;
+import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -46,5 +49,27 @@ public class ProductRepositoryTests {
         Assertions.assertThrows(EmptyResultDataAccessException.class, () -> {
            repository.deleteById(nonExistingId);
         });
+    }
+ //-------findById deveria
+    @Test
+    public void findByIdShouldReturnNonEmptyOptionalWhenExists(){
+        //retornar um Optional<Product> não vazio quando o id existir
+
+        long existingId = 1000L;
+
+        Optional<Product> result = repository.findById(existingId);
+
+        Assertions.assertTrue(result.isPresent());
+    }
+
+    @Test
+    public void findByIdShouldReturnOptionalWhenIdDoesNoExist(){
+        // retornar um Optional<Product> vazio quando o id não existir
+
+        long nonExistingId = 1000L;
+
+
+        Optional<Product> result = repository.findById(nonExistingId);
+        Assertions.assertTrue(result.isEmpty());
     }
 }
