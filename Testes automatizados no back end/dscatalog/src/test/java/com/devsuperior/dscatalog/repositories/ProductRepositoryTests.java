@@ -4,6 +4,7 @@ import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.entities.Product;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -17,6 +18,14 @@ public class ProductRepositoryTests {
 
     @Autowired
     private ProductRepository repository; // Injeta o repositório que será testado
+    private long exintingId;
+   private long nonExistingId;
+
+   @BeforeEach
+   void setUp() throws  Exception{
+       exintingId = 1L;
+       nonExistingId = 1000L;
+   }
 
     @Test
     public void deleteShouldDeleteObjectWhenIdExists() { // <AÇÃO> should <EFEITO> [when <CENÁRIO>]
@@ -42,33 +51,26 @@ public class ProductRepositoryTests {
 
 
     @Test
-    public void deleteShouldThrowsEmptyResultDataAccessExceptionWhenIdDoesNotExist(){
-
-        long nonExistingId = 20L;
-
+    public void deleteShouldThrowsEmptyResultDataAccessExceptionWhenIdDoesNotExist() {
         Assertions.assertThrows(EmptyResultDataAccessException.class, () -> {
-           repository.deleteById(nonExistingId);
+            repository.deleteById(nonExistingId);
         });
     }
- //-------findById deveria
+
+
+    //-------findById deveria
     @Test
     public void findByIdShouldReturnNonEmptyOptionalWhenExists(){
         //retornar um Optional<Product> não vazio quando o id existir
 
-        long existingId = 1000L;
-
-        Optional<Product> result = repository.findById(existingId);
-
+        long nonExistingIdnonExistingId = 1000L;
+        Optional<Product> result = repository.findById(exintingId);
         Assertions.assertTrue(result.isPresent());
     }
 
     @Test
     public void findByIdShouldReturnOptionalWhenIdDoesNoExist(){
         // retornar um Optional<Product> vazio quando o id não existir
-
-        long nonExistingId = 1000L;
-
-
         Optional<Product> result = repository.findById(nonExistingId);
         Assertions.assertTrue(result.isEmpty());
     }
