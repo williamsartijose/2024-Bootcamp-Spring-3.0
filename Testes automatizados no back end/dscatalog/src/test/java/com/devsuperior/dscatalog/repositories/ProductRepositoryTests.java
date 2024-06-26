@@ -3,6 +3,7 @@ package com.devsuperior.dscatalog.repositories;
 import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.entities.Product;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
+import com.devsuperior.dscatalog.tests.Factory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,12 +21,26 @@ public class ProductRepositoryTests {
     private ProductRepository repository; // Injeta o repositório que será testado
     private long exintingId;
    private long nonExistingId;
+   private long countTotalProducts;
 
    @BeforeEach
    void setUp() throws  Exception{
        exintingId = 1L;
        nonExistingId = 1000L;
+       countTotalProducts = 25L;
    }
+
+    @Test
+    public void saveShouldPersistWithAutoincrementWhenIdIsNull() {
+
+        Product product = Factory.createProduct();
+        product.setId(null);
+
+        product = repository.save(product);
+
+        Assertions.assertNotNull(product.getId());
+        Assertions.assertEquals(countTotalProducts + 1L, product.getId());
+    }
 
     @Test
     public void deleteShouldDeleteObjectWhenIdExists() { // <AÇÃO> should <EFEITO> [when <CENÁRIO>]
