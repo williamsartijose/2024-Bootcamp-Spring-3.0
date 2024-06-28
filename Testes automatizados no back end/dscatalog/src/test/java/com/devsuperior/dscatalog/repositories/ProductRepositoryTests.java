@@ -14,21 +14,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@DataJpaTest // Anotação para configurar o teste com um contexto JPA em memória
+@DataJpaTest
 public class ProductRepositoryTests {
 
     @Autowired
-    private ProductRepository repository; // Injeta o repositório que será testado
-    private long exintingId;
-   private long nonExistingId;
-   private long countTotalProducts;
+    private ProductRepository repository;
 
-   @BeforeEach
-   void setUp() throws  Exception{
-       exintingId = 1L;
-       nonExistingId = 1000L;
-       countTotalProducts = 25L;
-   }
+    private long existingId;
+    private long nonExistingId;
+    private long countTotalProducts;
+
+    @BeforeEach
+    void setUp() throws Exception {
+        existingId = 1L;
+        nonExistingId = 1000L;
+        countTotalProducts = 25L;
+    }
 
     @Test
     public void saveShouldPersistWithAutoincrementWhenIdIsNull() {
@@ -37,56 +38,29 @@ public class ProductRepositoryTests {
         product.setId(null);
 
         product = repository.save(product);
+        Optional<Product> result = repository.findById(product.getId());
 
         Assertions.assertNotNull(product.getId());
         Assertions.assertEquals(countTotalProducts + 1L, product.getId());
+        Assertions.assertTrue(result.isPresent());
+        Assertions.assertSame(result.get(), product);
     }
 
     @Test
-    public void deleteShouldDeleteObjectWhenIdExists() { // <AÇÃO> should <EFEITO> [when <CENÁRIO>]
-        // Descrição do método de teste:
-        // Teste o método deleteById para garantir que ele remove um produto corretamente quando o ID fornecido existe.
+    public void deleteShouldDeleteObjectWhenIdExists() {
 
+        repository.deleteById(existingId);
 
-        // --- Arrange: Preparar os dados para o teste ---
+        Optional<Product> result = repository.findById(existingId);
 
-        long existingId = 1L; // ID de um produto que deve existir no banco de dados de teste
-        // Assumimos que antes do teste ser executado, existe um produto com ID 1 no banco de dados
-
-        // --- Act: Executar a ação que está sendo testada ---
-
-        repository.deleteById(existingId); // Chama o método de exclusão no repositório para o ID especificado
-
-        // --- Assert: Verificar se os resultados são os esperados ---
-
-        Optional<Product> result = repository.findById(existingId); // Tenta buscar o produto deletado
         Assertions.assertFalse(result.isPresent());
-        // Verifica se o produto não está presente (o que significa que foi deletado com sucesso)
     }
 
-
     @Test
-    public void deleteShouldThrowsEmptyResultDataAccessExceptionWhenIdDoesNotExist() {
+    public void deleteShouldThrowEmptyResultDataAccessExceptionWhenIdDoesNotExist() {
+
         Assertions.assertThrows(EmptyResultDataAccessException.class, () -> {
             repository.deleteById(nonExistingId);
         });
-    }
-
-
-    //-------findById deveria
-    @Test
-    public void findByIdShouldReturnNonEmptyOptionalWhenExists(){
-        //retornar um Optional<Product> não vazio quando o id existir
-
-        long nonExistingIdnonExistingId = 1000L;
-        Optional<Product> result = repository.findById(exintingId);
-        Assertions.assertTrue(result.isPresent());
-    }
-
-    @Test
-    public void findByIdShouldReturnOptionalWhenIdDoesNoExist(){
-        // retornar um Optional<Product> vazio quando o id não existir
-        Optional<Product> result = repository.findById(nonExistingId);
-        Assertions.assertTrue(result.isEmpty());
     }
 }
