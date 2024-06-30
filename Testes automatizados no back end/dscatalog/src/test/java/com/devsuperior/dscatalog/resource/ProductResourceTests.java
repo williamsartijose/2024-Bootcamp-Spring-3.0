@@ -9,7 +9,8 @@ import java.util.List;
 
 import com.devsuperior.dscatalog.resources.ProductResource;
 import static org.mockito.ArgumentMatchers.any;
-
+import static org.mockito.ArgumentMatchers.eq;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,6 +61,9 @@ public class ProductResourceTests {
         when(service.findById(existingId)).thenReturn(productDTO);
         when(service.findById(nonExistingId)).thenThrow(ResourceNotFoundException.class);
 
+        when(service.update(eq(existingId), any())).thenReturn(productDTO);
+        when(service.update(eq(nonExistingId), any())).thenThrow(ResourceNotFoundException.class);
+
     }
 
     @Test
@@ -71,7 +75,36 @@ public class ProductResourceTests {
 
         result.andExpect(status().isOk());
     }
+    @Test
+    public void updateShouldReturnProductDTOWhenIdExists() throws Exception {
 
+        String jsonBody = objectMapper.writeValueAsString(productDTO);
+
+        ResultActions result =
+                mockMvc.perform(put("/products/{id}", existingId)
+                        .content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isOk());
+        result.andExpect(jsonPath("$.id").exists());
+        result.andExpect(jsonPath("$.name").exists());
+        result.andExpect(jsonPath("$.description").exists());
+    }
+
+    @Test
+    public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
+
+        String jsonBody = objectMapper.writeValueAsString(productDTO);
+
+        ResultActions result =
+                mockMvc.perform(put("/products/{id}", nonExistingId)
+                        .content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isNotFound());
+    }
     @Test
     public void findByIdShouldReturnProductWhenIdExists() throws Exception {
 
